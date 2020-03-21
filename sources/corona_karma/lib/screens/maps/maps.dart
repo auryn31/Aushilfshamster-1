@@ -65,7 +65,7 @@ class MapSampleState extends State<MapSample> {
                 CupertinoButton(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Styles.blue,
+                      color: Styles.blue4,
                       borderRadius: BorderRadius.circular(36),
                     ),
                     height: 36,
