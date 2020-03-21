@@ -45,6 +45,7 @@ flutter:
     - assets/corn.png
     - assets/bleach.png
     - assets/spaghetti.png
+    - assets/profile.png
     - assets/chatIcons/dog.svg
     - assets/chatIcons/groceries.svg
     - assets/chatIcons/pills.svg

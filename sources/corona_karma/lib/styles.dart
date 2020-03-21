@@ -24,4 +24,9 @@ abstract class Styles {
       color: Color.fromARGB(255, 0, 0, 0),
       fontFamily: "IBM Plex Sans",
       fontWeight: FontWeight.w600);
+
+  static const TextStyle editProfileButton = TextStyle(
+      fontSize: 15,
+      color: Color.fromARGB(255, 23, 126, 232),
+      fontFamily: "IBM Plex Sans");
 }
