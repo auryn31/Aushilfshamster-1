@@ -1,4 +1,5 @@
 import 'package:corona_karma/models/help.dart';
+import 'package:corona_karma/widgets/titleBar.dart';
 import 'package:flutter/cupertino.dart';
 
 class Help extends StatefulWidget {
@@ -46,7 +47,7 @@ class _HelpState extends State<Help> {
     }
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text("Wobei brauchst du Hilfe"),
+        middle: TitleBar(titleText: "Wobei brauchst du Hilfe"),
       ),
       child: SafeArea(
         child: Container(
