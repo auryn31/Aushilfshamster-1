@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>104152397314-55unu437kinn8575p2jsh6vek053g7k3.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.104152397314-55unu437kinn8575p2jsh6vek053g7k3</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAgMOkMUvriN_KzwBpZxg6c5FecN9uG-Ak</string>
+	<key>GCM_SENDER_ID</key>
+	<string>104152397314</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.coronaKarma</string>
+	<key>PROJECT_ID</key>
+	<string>corona-karma</string>
+	<key>STORAGE_BUCKET</key>
+	<string>corona-karma.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:104152397314:ios:f410de473a68a893f0191b</string>
+	<key>DATABASE_URL</key>
+	<string>https://corona-karma.firebaseio.com</string>
+</dict>
+</plist>
