@@ -1,6 +1,6 @@
 import 'package:corona_karma/screens/authenticate/register.dart';
 import 'package:corona_karma/screens/authenticate/sign_in.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class Authenticate extends StatefulWidget {
   @override

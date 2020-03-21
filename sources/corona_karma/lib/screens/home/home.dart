@@ -1,5 +1,5 @@
 import 'package:corona_karma/services/auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class Home extends StatelessWidget {
   final AuthService _authService = AuthService();
@@ -7,20 +7,18 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("Corona Carma"),
-          actions: <Widget>[
-            IconButton(
+      child: CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          middle: Text("Corona Karma"),
+          trailing: 
+          CupertinoButton(
               onPressed: () async {
                 await _authService.signOut();
               },
-              icon: Icon(Icons.exit_to_app),
+              child: Icon(CupertinoIcons.padlock),
             ),
-          ],
         ),
-        body: Container(
-          padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30),
+        child: Center(
           child: Text("You are logged in"),
         ),
       ),
