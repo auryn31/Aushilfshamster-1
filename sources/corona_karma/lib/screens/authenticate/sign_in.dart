@@ -1,6 +1,5 @@
-import 'package:corona_karma/models/user.dart';
 import 'package:corona_karma/services/auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
@@ -13,73 +12,73 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   final AuthService authService = AuthService();
-  final _formKey = GlobalKey<FormState>();
 
   String email = "";
   String password = "";
   String error = "";
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Sign In for Karma"),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.person_add),
-              onPressed: () => widget.toggleView())
-        ],
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                    icon: Icon(Icons.person), labelText: "Email"),
-                onChanged: (value) => setState(() => email = value),
-                validator: (value) => value.isEmpty ? 'Enter an email' : null,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                    icon: Icon(Icons.lock), labelText: "Password"),
-                onChanged: (value) => setState(() => password = value),
-                validator: (value) => value.isEmpty ? 'Enter a passwort' : null,
-                obscureText: true,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RaisedButton(
-                child: Text("Sign in"),
-                onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    dynamic result = await authService.signIn(email, password);
-                    if (result == null) {
-                      setState(() => error = "ERROR while login");
-                    }
-                  }
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                error,
-                style: TextStyle(color: Colors.red, fontSize: 20),
+    return CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+            middle: Text("Sign In for Karma"),
+            trailing: CupertinoButton(
+                child: Icon(CupertinoIcons.person_add),
+                onPressed: () => widget.toggleView())),
+        child: loading
+            ? Container(
+                child: new Center(
+                  child: new CupertinoActivityIndicator(),
+                ),
               )
-            ],
-          ),
-        ),
-      ),
-    );
+            : SafeArea(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CupertinoTextField(
+                        placeholder: "Email",
+                        onChanged: (value) => setState(() => email = value),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CupertinoTextField(
+                        placeholder: "Password",
+                        onChanged: (value) => setState(() => password = value),
+                        obscureText: true,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CupertinoButton(
+                        child: Text("Sign in"),
+                        onPressed: () async {
+                          setState(() => loading = true);
+                          dynamic result =
+                              await authService.signIn(email, password);
+                          setState(() => loading = false);
+                          if (result == null) {
+                            setState(() => error = "ERROR while login");
+                          }
+                        },
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        error,
+                        style: TextStyle(
+                            color: CupertinoColors.destructiveRed,
+                            fontSize: 20),
+                      )
+                    ],
+                  ),
+                ),
+              ));
   }
 }

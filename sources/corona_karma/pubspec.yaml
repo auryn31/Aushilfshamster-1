@@ -33,6 +33,3 @@ dev_dependencies:
   cloud_firestore: ^0.13.4+2
   provider: ^4.0.4
 
-flutter:
-
-  uses-material-design: true
