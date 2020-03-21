@@ -1,18 +1,15 @@
-import 'package:corona_karma/models/user.dart';
 import 'package:corona_karma/services/auth.dart';
 import 'package:flutter/material.dart';
 
-class SignIn extends StatefulWidget {
-
+class Register extends StatefulWidget {
   final Function toggleView;
-
-  const SignIn({this.toggleView});
+  const Register({this.toggleView});
 
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
   final AuthService authService = AuthService();
 
   String email = "";
@@ -22,9 +19,9 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign In for Karma"),
+        title: Text("Register for Karma"),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.person_add), onPressed: () => widget.toggleView())
+          IconButton(icon: Icon(Icons.person), onPressed: () => widget.toggleView())
         ],
       ),
       body: Container(
@@ -61,7 +58,7 @@ class _SignInState extends State<SignIn> {
                 height: 20,
               ),
               RaisedButton(
-                child: Text("Sign in"),
+                child: Text("Register"),
                 onPressed: () async {
                   print(email);
                   print(password);

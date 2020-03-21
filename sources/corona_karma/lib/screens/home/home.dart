@@ -7,22 +7,23 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Scaffold(
-      appBar: AppBar(
-        title: Text("Corona Carma"),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () async {
-              await _authService.signOut();
-            },
-            icon: Icon(Icons.exit_to_app),
-          ),
-        ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Corona Carma"),
+          actions: <Widget>[
+            IconButton(
+              onPressed: () async {
+                await _authService.signOut();
+              },
+              icon: Icon(Icons.exit_to_app),
+            ),
+          ],
+        ),
+        body: Container(
+          padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30),
+          child: Text("You are logged in"),
+        ),
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30),
-        child: Text("You are logged in"),
-      ),
-    ));
+    );
   }
 }
