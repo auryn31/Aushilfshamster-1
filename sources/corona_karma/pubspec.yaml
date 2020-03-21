@@ -49,4 +49,10 @@ flutter:
     - assets/chatIcons/groceries.svg
     - assets/chatIcons/pills.svg
     - assets/chatIcons/postal.svg
+    - assets/tabIcons/chat.svg
+    - assets/tabIcons/map.svg
+    - assets/tabIcons/profile.svg
+    - assets/tabIcons/chat_active.svg
+    - assets/tabIcons/map_active.svg
+    - assets/tabIcons/profile_active.svg
     - assets/maps_position.svg

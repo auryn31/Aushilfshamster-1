@@ -1,6 +1,7 @@
 import 'package:corona_karma/tabs/mapTab.dart';
 import 'package:corona_karma/tabs/profileTab.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../tabs/chatTab.dart';
 
@@ -12,11 +13,29 @@ class Home extends StatelessWidget {
       tabBar: CupertinoTabBar(
         items: [
           BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.search), title: Text("Karte")),
+              icon: Container(
+                  child: SvgPicture.asset("assets/tabIcons/map.svg"),
+                  margin: EdgeInsets.only(top: 5)),
+              activeIcon: Container(
+                  child: SvgPicture.asset("assets/tabIcons/map_active.svg"),
+                  margin: EdgeInsets.only(top: 5)),
+              title: Text("Karte")),
           BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.search), title: Text("Chats")),
+              icon: Container(
+                  child: SvgPicture.asset("assets/tabIcons/chat.svg"),
+                  margin: EdgeInsets.only(top: 5)),
+              activeIcon: Container(
+                  child: SvgPicture.asset("assets/tabIcons/chat_active.svg"),
+                  margin: EdgeInsets.only(top: 5)),
+              title: Text("Chats")),
           BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.person), title: Text("Profil")),
+              icon: Container(
+                  child: SvgPicture.asset("assets/tabIcons/profile.svg"),
+                  margin: EdgeInsets.only(top: 5)),
+              activeIcon: Container(
+                  child: SvgPicture.asset("assets/tabIcons/profile_active.svg"),
+                  margin: EdgeInsets.only(top: 5)),
+              title: Text("Profil")),
         ],
       ),
       tabBuilder: (context, index) {
