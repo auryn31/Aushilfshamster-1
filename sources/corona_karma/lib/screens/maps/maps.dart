@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:corona_karma/screens/help/help.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -54,8 +55,13 @@ class MapSampleState extends State<MapSample> {
                       placeholder: "Suche", onChanged: (value) => print(value)),
                 ),
                 CupertinoButton(
-                  child: Icon(CupertinoIcons.search),
-                  onPressed: () {},
+                  child: Icon(CupertinoIcons.plus_circled),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (context) => Help("Hallo")),
+                    );
+                  },
                 )
               ],
             ),
@@ -65,7 +71,7 @@ class MapSampleState extends State<MapSample> {
             child: new Align(
               alignment: FractionalOffset.bottomRight,
               child: CupertinoButton(
-                child: Icon(CupertinoIcons.add),
+                child: Icon(CupertinoIcons.plus_circled),
                 onPressed: () => _goToCurrentLocation(),
               ),
             ),
