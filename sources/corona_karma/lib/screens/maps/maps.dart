@@ -11,36 +11,48 @@ class MapSample extends StatefulWidget {
 
 class MapSampleState extends State<MapSample> {
   static const MARKERID = "PositionMarkerID";
+  static const INITIAL_LOCATION = LatLng(47.42796133580664, -122.085749655962);
+  static const ZOOM_LEVEL = 16.4746;
 
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = Set<Marker>();
+  LocationData currentLocation;
 
   static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(47.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+    target: INITIAL_LOCATION,
+    zoom: ZOOM_LEVEL,
   );
 
   @override
   Widget build(BuildContext context) {
     _trackUser();
-    return CupertinoPageScaffold(
-      child: new Scaffold(
-        body: GoogleMap(
-          myLocationButtonEnabled: true,
-          mapType: MapType.normal,
-          initialCameraPosition: _kGooglePlex,
-          onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
-            setState(() {
-              _markers = {
-                Marker(
-                  markerId: MarkerId(MARKERID),
-                  position: LatLng(47.42796133580664, -122.085749655962),
-                )
-              };
-            });
-          },
-          markers: _markers,
+    return SafeArea(
+      child: CupertinoPageScaffold(
+        child: new Scaffold(
+          body: GoogleMap(
+            mapType: MapType.normal,
+            initialCameraPosition: _kGooglePlex,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+              setState(() {
+                _markers = {
+                  Marker(
+                    markerId: MarkerId(MARKERID),
+                    position: currentLocation != null
+                        ? LatLng(
+                            currentLocation.latitude, currentLocation.longitude)
+                        : INITIAL_LOCATION,
+                  )
+                };
+              });
+            },
+            markers: _markers,
+            myLocationButtonEnabled: false,
+          ),
+          floatingActionButton: CupertinoButton(
+            onPressed: _goToCurrentLocation,
+            child: Icon(CupertinoIcons.person),
+          ),
         ),
       ),
     );
@@ -69,32 +81,35 @@ class MapSampleState extends State<MapSample> {
     }
 
     location.onLocationChanged().listen((location) {
-      _goCurrentPosition(location.longitude, location.latitude);
+      _updateCurrentLocation(location);
     });
   }
 
-  Future<void> _goCurrentPosition(double long, double lat) async {
-    final GoogleMapController controller = await _controller.future;
+  Future<void> _updateCurrentLocation(LocationData location) async {
     var marker = Marker(
       markerId: MarkerId(MARKERID),
-      position: LatLng(lat, long),
-    );
-
-    controller.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: LatLng(lat, long),
-          zoom: 16.4746,
-        ),
-      ),
+      position: LatLng(location.latitude, location.longitude),
     );
 
     setState(() {
-      print(_markers);
+      currentLocation = location;
       _markers.removeWhere((m) => m.markerId.value == MARKERID);
-      print(_markers);
       _markers.add(marker);
-      print(_markers);
     });
+  }
+
+  Future<void> _goToCurrentLocation() async {
+    if (currentLocation == null) {
+      return;
+    }
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(currentLocation.latitude, currentLocation.longitude),
+          zoom: ZOOM_LEVEL,
+        ),
+      ),
+    );
   }
 }
