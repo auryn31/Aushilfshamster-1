@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:corona_karma/screens/help/help.dart';
+import 'package:corona_karma/styles.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -17,6 +19,8 @@ class MapSampleState extends State<MapSample> {
   static const INITIAL_LOCATION = LatLng(47.42796133580664, -122.085749655962);
   static const ZOOM_LEVEL = 16.4746;
   static var positionWidget = SvgPicture.asset("assets/maps_position.svg");
+
+  String searchText = '';
 
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = Set<Marker>();
@@ -52,14 +56,31 @@ class MapSampleState extends State<MapSample> {
               children: <Widget>[
                 Expanded(
                   child: CupertinoTextField(
-                      placeholder: "Suche", onChanged: (value) => print(value)),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          color: Colors.white),
+                      placeholder: "Suche",
+                      onChanged: (value) => setState(() => searchText = value)),
                 ),
                 CupertinoButton(
-                  child: Icon(CupertinoIcons.plus_circled),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Styles.blue4,
+                      borderRadius: BorderRadius.circular(36),
+                    ),
+                    height: 36,
+                    width: 36,
+                    child: Icon(
+                      CupertinoIcons.add,
+                      color: Colors.white,
+                      size: 36,
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.push(
                       context,
-                      CupertinoPageRoute(builder: (context) => Help("Hallo")),
+                      CupertinoPageRoute(
+                          builder: (context) => Help(searchText)),
                     );
                   },
                 )

@@ -29,4 +29,14 @@ abstract class Styles {
       fontSize: 15,
       color: Color.fromARGB(255, 23, 126, 232),
       fontFamily: "IBM Plex Sans");
+
+  static const Color blue1 = Color(0xFF80d8ff);
+  static const Color blue2 = Color(0xFF40c4ff);
+  static const Color blue3 = Color(0xFF00b0ff);
+  static const Color blue4 = Color(0xFF177EE8);
+
+  static const Color yellow1 = Color(0xFFffe57f);
+  static const Color yellow2 = Color(0xFFffd740);
+  static const Color yellow3 = Color(0xFFffc400);
+  static const Color yellow4 = Color(0xFFffab00);
 }
