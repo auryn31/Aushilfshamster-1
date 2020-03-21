@@ -1,8 +1,13 @@
+import 'package:corona_karma/screens/maps/maps.dart';
 import 'package:corona_karma/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 
 class Home extends StatelessWidget {
   final AuthService _authService = AuthService();
+
+  Widget _buildMaps(context) {
+    return MapSample();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,29 +16,23 @@ class Home extends StatelessWidget {
       tabBar: CupertinoTabBar(
         items: [
           BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.search), title: Text("Suche")),
+              icon: Icon(CupertinoIcons.search), title: Text("Karte")),
           BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.search), title: Text("Biete")),
           BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.search), title: Text("List")),
+              icon: Icon(CupertinoIcons.collections), title: Text("List")),
           BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.search), title: Text("Profil")),
+              icon: Icon(CupertinoIcons.person), title: Text("Profil")),
         ],
       ),
       tabBuilder: (context, index) {
         switch (index) {
           case 0:
-            return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(
-                child: SafeArea(child: Text("Suche")),
-              );
-            });
+            return CupertinoTabView(builder: _buildMaps);
           case 1:
-            return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(
-                child: SafeArea(child: Text("Biete")),
+            return CupertinoPageScaffold(
+                child: SafeArea(child: Text("Chat")),
               );
-            });
           case 2:
             return CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
