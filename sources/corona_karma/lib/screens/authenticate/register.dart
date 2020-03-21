@@ -15,6 +15,7 @@ class _RegisterState extends State<Register> {
 
   String email = "";
   String password = "";
+  String error = "";
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +62,20 @@ class _RegisterState extends State<Register> {
                 child: Text("Register"),
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
-                    authService.register(email, password);
+                    dynamic result =
+                        await authService.register(email, password);
+                    if (result == null) {
+                      setState(() => error = "error while create account");
+                    }
                   }
                 },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                error,
+                style: TextStyle(color: Colors.red, fontSize: 20),
               )
             ],
           ),
