@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
@@ -28,33 +27,63 @@ class MapSampleState extends State<MapSample> {
     _trackUser();
     return SafeArea(
       child: CupertinoPageScaffold(
-        child: new Scaffold(
-          body: GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: _kGooglePlex,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-              setState(() {
-                _markers = {
-                  Marker(
-                    markerId: MarkerId(MARKERID),
-                    position: currentLocation != null
-                        ? LatLng(
-                            currentLocation.latitude, currentLocation.longitude)
-                        : INITIAL_LOCATION,
-                  )
-                };
-              });
-            },
-            markers: _markers,
-            myLocationButtonEnabled: false,
+          child: Stack(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(0),
+            child: GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: _kGooglePlex,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+                setState(() {
+                  _markers = {
+                    Marker(
+                      markerId: MarkerId(MARKERID),
+                      position: currentLocation != null
+                          ? LatLng(currentLocation.latitude,
+                              currentLocation.longitude)
+                          : INITIAL_LOCATION,
+                    )
+                  };
+                });
+              },
+              markers: _markers,
+              myLocationButtonEnabled: false,
+            ),
           ),
-          floatingActionButton: CupertinoButton(
-            onPressed: _goToCurrentLocation,
-            child: Icon(CupertinoIcons.person),
+          Container(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: CupertinoTextField(
+                      placeholder: "Suche", onChanged: (value) => print(value)),
+                ),
+                CupertinoButton(
+                  child: Icon(CupertinoIcons.search),
+                  onPressed: () {},
+                )
+              ],
+            ),
+            padding: EdgeInsets.all(16),
           ),
-        ),
-      ),
+          new Positioned(
+            child: new Align(
+              alignment: FractionalOffset.bottomRight,
+              child: CupertinoButton(
+                child: Icon(CupertinoIcons.add),
+                onPressed: () => _goToCurrentLocation(),
+              ),
+            ),
+          ),
+        ],
+      )
+
+          // floatingActionButton: CupertinoButton(
+          //   onPressed: _goToCurrentLocation,
+          //   child: Icon(CupertinoIcons.person),
+          // ),
+          ),
     );
   }
 
