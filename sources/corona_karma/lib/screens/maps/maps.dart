@@ -26,34 +26,30 @@ class MapSampleState extends State<MapSample> {
   @override
   Widget build(BuildContext context) {
     _trackUser();
-    return SafeArea(
-      child: CupertinoPageScaffold(
-        child: new Scaffold(
-          body: GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: _kGooglePlex,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-              setState(() {
-                _markers = {
-                  Marker(
-                    markerId: MarkerId(MARKERID),
-                    position: currentLocation != null
-                        ? LatLng(
-                            currentLocation.latitude, currentLocation.longitude)
-                        : INITIAL_LOCATION,
-                  )
-                };
-              });
-            },
-            markers: _markers,
-            myLocationButtonEnabled: false,
-          ),
-          floatingActionButton: CupertinoButton(
-            onPressed: _goToCurrentLocation,
-            child: Icon(CupertinoIcons.person),
-          ),
-        ),
+    return Scaffold(
+      body: GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: _kGooglePlex,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+          setState(() {
+            _markers = {
+              Marker(
+                markerId: MarkerId(MARKERID),
+                position: currentLocation != null
+                    ? LatLng(
+                        currentLocation.latitude, currentLocation.longitude)
+                    : INITIAL_LOCATION,
+              )
+            };
+          });
+        },
+        markers: _markers,
+        myLocationButtonEnabled: false,
+      ),
+      floatingActionButton: CupertinoButton(
+        onPressed: _goToCurrentLocation,
+        child: Icon(CupertinoIcons.person),
       ),
     );
   }

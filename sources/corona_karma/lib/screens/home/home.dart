@@ -1,14 +1,10 @@
-import 'package:corona_karma/screens/maps/maps.dart';
-import 'package:corona_karma/services/auth.dart';
+import 'package:corona_karma/tabs/mapTab.dart';
+import 'package:corona_karma/tabs/profileTab.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../tabs/chatTab.dart';
+
 class Home extends StatelessWidget {
-  final AuthService _authService = AuthService();
-
-  Widget _buildMaps(context) {
-    return MapSample();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,9 +14,7 @@ class Home extends StatelessWidget {
           BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.search), title: Text("Karte")),
           BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.search), title: Text("Biete")),
-          BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.collections), title: Text("List")),
+              icon: Icon(CupertinoIcons.search), title: Text("Chats")),
           BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.person), title: Text("Profil")),
         ],
@@ -28,32 +22,13 @@ class Home extends StatelessWidget {
       tabBuilder: (context, index) {
         switch (index) {
           case 0:
-            return CupertinoTabView(builder: _buildMaps);
+            return CupertinoTabView(builder: buildMaps);
           case 1:
-            return CupertinoPageScaffold(
-                child: SafeArea(child: Text("Chat")),
-              );
+            return CupertinoTabView(builder: chatBuilder);
           case 2:
-            return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(
-                child: SafeArea(child: Text("List")),
-              );
-            });
-          case 3:
-            return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(
-                navigationBar: CupertinoNavigationBar(
-                  middle: Text("Profil"),
-                  trailing: CupertinoButton(
-                    onPressed: () async {
-                      await _authService.signOut();
-                    },
-                    child: Icon(CupertinoIcons.padlock),
-                  ),
-                ),
-                child: SafeArea(child: Text("Profil")),
-              );
-            });
+            return CupertinoTabView(builder: profileBuilder);
+          default:
+            return CupertinoTabView(builder: buildMaps);
         }
       },
     ));

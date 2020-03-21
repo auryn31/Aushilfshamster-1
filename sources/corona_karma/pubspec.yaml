@@ -25,6 +25,8 @@ dependencies:
   cupertino_icons: ^0.1.2
   google_maps_flutter: ^0.5.25
   location: ^2.5.0
+  timeago: ^2.0.26
+  flutter_svg: ^0.17.3+1
 
 dev_dependencies:
   flutter_test:
@@ -34,3 +36,15 @@ dev_dependencies:
   firebase_auth: ^0.15.5+3
   cloud_firestore: ^0.13.4+2
   provider: ^4.0.4
+
+flutter:
+  assets:
+    - assets/toilet_paper.png
+    - assets/can.png
+    - assets/corn.png
+    - assets/bleach.png
+    - assets/spaghetti.png
+    - assets/chatIcons/dog.svg
+    - assets/chatIcons/groceries.svg
+    - assets/chatIcons/pills.svg
+    - assets/chatIcons/postal.svg
