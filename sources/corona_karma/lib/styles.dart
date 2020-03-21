@@ -24,4 +24,6 @@ abstract class Styles {
       color: Color.fromARGB(255, 0, 0, 0),
       fontFamily: "IBM Plex Sans",
       fontWeight: FontWeight.w600);
+
+  static const Color blue = Color(0xFF177EE8);
 }
