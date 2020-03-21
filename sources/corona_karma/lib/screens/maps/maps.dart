@@ -10,6 +10,8 @@ class MapSample extends StatefulWidget {
 }
 
 class MapSampleState extends State<MapSample> {
+  static const MARKERID = "PositionMarkerID";
+
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = Set<Marker>();
 
@@ -24,11 +26,19 @@ class MapSampleState extends State<MapSample> {
     return CupertinoPageScaffold(
       child: new Scaffold(
         body: GoogleMap(
-          myLocationButtonEnabled: false,
+          myLocationButtonEnabled: true,
           mapType: MapType.normal,
           initialCameraPosition: _kGooglePlex,
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
+            setState(() {
+              _markers = {
+                Marker(
+                  markerId: MarkerId(MARKERID),
+                  position: LatLng(47.42796133580664, -122.085749655962),
+                )
+              };
+            });
           },
           markers: _markers,
         ),
@@ -41,14 +51,6 @@ class MapSampleState extends State<MapSample> {
 
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
-    setState(() {
-         _markers =
-            {Marker(
-               markerId: MarkerId("PositionID"),
-               position: LatLng(47.42796133580664, -122.085749655962),
-            )}
-         ;
-      });
 
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
@@ -67,21 +69,17 @@ class MapSampleState extends State<MapSample> {
     }
 
     location.onLocationChanged().listen((location) {
-        
-        _goCurrentPosition(location.longitude, location.latitude);
-        });
+      _goCurrentPosition(location.longitude, location.latitude);
+    });
   }
 
   Future<void> _goCurrentPosition(double long, double lat) async {
     final GoogleMapController controller = await _controller.future;
     var marker = Marker(
-               markerId: MarkerId("PositionID"),
-               position: LatLng(lat, long),
-            );
-        setState(() {
-          _markers.removeWhere((m) => m.markerId.value == "PositionID");
-          _markers.add(marker);
-        });
+      markerId: MarkerId(MARKERID),
+      position: LatLng(lat, long),
+    );
+
     controller.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -90,5 +88,13 @@ class MapSampleState extends State<MapSample> {
         ),
       ),
     );
+
+    setState(() {
+      print(_markers);
+      _markers.removeWhere((m) => m.markerId.value == MARKERID);
+      print(_markers);
+      _markers.add(marker);
+      print(_markers);
+    });
   }
 }
