@@ -31,51 +31,53 @@ class _RegisterState extends State<Register> {
                 child: new CupertinoActivityIndicator(),
               ),
             )
-          : Container(
-              padding: EdgeInsets.fromLTRB(16, 82, 16, 0),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 20,
-                  ),
-                  CupertinoTextField(
-                    placeholder: "Email",
-                    onChanged: (value) => setState(() => email = value),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  CupertinoTextField(
-                    placeholder: "Password",
-                    onChanged: (value) {
-                      setState(() => password = value);
-                    },
-                    obscureText: true,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  CupertinoButton(
-                    child: Text("Register"),
-                    onPressed: () async {
-                      setState(() => loading = true);
-                      dynamic result =
-                          await authService.register(email, password);
-                      setState(() => loading = false);
-                      if (result == null) {
-                        setState(() => error = "error while create account");
-                      }
-                    },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    error,
-                    style: TextStyle(
-                        color: CupertinoColors.destructiveRed, fontSize: 20),
-                  )
-                ],
+          : SafeArea(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 20,
+                    ),
+                    CupertinoTextField(
+                      placeholder: "Email",
+                      onChanged: (value) => setState(() => email = value),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    CupertinoTextField(
+                      placeholder: "Password",
+                      onChanged: (value) {
+                        setState(() => password = value);
+                      },
+                      obscureText: true,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    CupertinoButton(
+                      child: Text("Register"),
+                      onPressed: () async {
+                        setState(() => loading = true);
+                        dynamic result =
+                            await authService.register(email, password);
+                        setState(() => loading = false);
+                        if (result == null) {
+                          setState(() => error = "error while create account");
+                        }
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      error,
+                      style: TextStyle(
+                          color: CupertinoColors.destructiveRed, fontSize: 20),
+                    )
+                  ],
+                ),
               ),
             ),
     );
