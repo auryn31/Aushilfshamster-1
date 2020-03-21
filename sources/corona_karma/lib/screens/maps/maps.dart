@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:ui' as ui;
 
 class MapSample extends StatefulWidget {
   @override
@@ -12,6 +15,7 @@ class MapSampleState extends State<MapSample> {
   static const MARKERID = "PositionMarkerID";
   static const INITIAL_LOCATION = LatLng(47.42796133580664, -122.085749655962);
   static const ZOOM_LEVEL = 16.4746;
+  static var positionWidget = SvgPicture.asset("assets/maps_position.svg");
 
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = Set<Marker>();
@@ -36,17 +40,7 @@ class MapSampleState extends State<MapSample> {
               initialCameraPosition: _kGooglePlex,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
-                setState(() {
-                  _markers = {
-                    Marker(
-                      markerId: MarkerId(MARKERID),
-                      position: currentLocation != null
-                          ? LatLng(currentLocation.latitude,
-                              currentLocation.longitude)
-                          : INITIAL_LOCATION,
-                    )
-                  };
-                });
+                _setInitialMarker();
               },
               markers: _markers,
               myLocationButtonEnabled: false,
@@ -87,6 +81,21 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
+  Future<void> _setInitialMarker() async {
+    BitmapDescriptor bitmapDescriptor = await _bitmapDescriptorFromSvgAsset(
+        context, 'assets/maps_position.svg');
+    setState(() {
+      _markers = {
+        Marker(
+            markerId: MarkerId(MARKERID),
+            position: currentLocation != null
+                ? LatLng(currentLocation.latitude, currentLocation.longitude)
+                : INITIAL_LOCATION,
+            icon: bitmapDescriptor)
+      };
+    });
+  }
+
   Future<void> _trackUser() async {
     Location location = new Location();
 
@@ -115,10 +124,12 @@ class MapSampleState extends State<MapSample> {
   }
 
   Future<void> _updateCurrentLocation(LocationData location) async {
+    BitmapDescriptor bitmapDescriptor = await _bitmapDescriptorFromSvgAsset(
+        context, 'assets/maps_position.svg');
     var marker = Marker(
-      markerId: MarkerId(MARKERID),
-      position: LatLng(location.latitude, location.longitude),
-    );
+        markerId: MarkerId(MARKERID),
+        position: LatLng(location.latitude, location.longitude),
+        icon: bitmapDescriptor);
 
     setState(() {
       currentLocation = location;
@@ -140,5 +151,24 @@ class MapSampleState extends State<MapSample> {
         ),
       ),
     );
+  }
+
+  Future<BitmapDescriptor> _bitmapDescriptorFromSvgAsset(
+      BuildContext context, String assetName) async {
+    String svgString =
+        await DefaultAssetBundle.of(context).loadString(assetName);
+    DrawableRoot svgDrawableRoot = await svg.fromSvgString(svgString, null);
+
+    MediaQueryData queryData = MediaQuery.of(context);
+    double devicePixelRatio = queryData.devicePixelRatio;
+    double width =
+        32 * devicePixelRatio; // where 32 is your SVG's original width
+    double height = 32 * devicePixelRatio; // same thing
+
+    ui.Picture picture = svgDrawableRoot.toPicture(size: Size(width, height));
+
+    ui.Image image = await picture.toImage(width.toInt(), height.toInt());
+    ByteData bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+    return BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
   }
 }

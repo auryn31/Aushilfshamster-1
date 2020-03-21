@@ -27,9 +27,9 @@ class Home extends StatelessWidget {
       ),
       tabBuilder: (context, index) {
         switch (index) {
-          case 0:
-            return CupertinoTabView(builder: _buildMaps);
           case 1:
+            return CupertinoTabView(builder: _buildMaps);
+          case 0:
             return CupertinoPageScaffold(
                 child: SafeArea(child: Text("Chat")),
               );
