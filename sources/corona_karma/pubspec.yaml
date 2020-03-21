@@ -19,6 +19,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+    
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -48,3 +49,4 @@ flutter:
     - assets/chatIcons/groceries.svg
     - assets/chatIcons/pills.svg
     - assets/chatIcons/postal.svg
+    - assets/maps_position.svg
