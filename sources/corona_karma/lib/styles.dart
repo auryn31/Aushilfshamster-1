@@ -18,4 +18,10 @@ abstract class Styles {
     color: Color.fromARGB(255, 62, 62, 62),
     fontFamily: "IBM Plex Sans",
   );
+
+  static const TextStyle navbarTitle = TextStyle(
+      fontSize: 21,
+      color: Color.fromARGB(255, 0, 0, 0),
+      fontFamily: "IBM Plex Sans",
+      fontWeight: FontWeight.w600);
 }

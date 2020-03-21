@@ -17,7 +17,7 @@ class ChatPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.fromLTRB(19, 17, 19, 17),
+        margin: EdgeInsets.fromLTRB(19, 15, 19, 10),
         child: Row(children: [
           Container(
               margin: EdgeInsets.only(right: 15),
