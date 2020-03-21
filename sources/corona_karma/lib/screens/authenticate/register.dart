@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
-  const Register({this.toggleView});
+  const Register(this.toggleView);
 
   @override
   _RegisterState createState() => _RegisterState();
@@ -11,6 +11,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final AuthService authService = AuthService();
+  final _formKey = GlobalKey<FormState>();
 
   String email = "";
   String password = "";
@@ -21,12 +22,14 @@ class _RegisterState extends State<Register> {
       appBar: AppBar(
         title: Text("Register for Karma"),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.person), onPressed: () => widget.toggleView())
+          IconButton(
+              icon: Icon(Icons.person), onPressed: () => widget.toggleView())
         ],
       ),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30),
         child: Form(
+          key: _formKey,
           child: Column(
             children: <Widget>[
               SizedBox(
@@ -35,11 +38,8 @@ class _RegisterState extends State<Register> {
               TextFormField(
                 decoration: InputDecoration(
                     icon: Icon(Icons.person), labelText: "Email"),
-                onChanged: (value) {
-                  setState(() {
-                    email = value;
-                  });
-                },
+                onChanged: (value) => setState(() => email = value),
+                validator: (value) => value.isEmpty ? 'Enter an email' : null,
               ),
               SizedBox(
                 height: 20,
@@ -48,11 +48,11 @@ class _RegisterState extends State<Register> {
                 decoration: InputDecoration(
                     icon: Icon(Icons.lock), labelText: "Password"),
                 onChanged: (value) {
-                  setState(() {
-                    password = value;
-                  });
+                  setState(() => password = value);
                 },
                 obscureText: true,
+                validator: (value) =>
+                    value.length < 6 ? 'Enter a password 6+ chars long ' : null,
               ),
               SizedBox(
                 height: 20,
@@ -60,8 +60,9 @@ class _RegisterState extends State<Register> {
               RaisedButton(
                 child: Text("Register"),
                 onPressed: () async {
-                  print(email);
-                  print(password);
+                  if (_formKey.currentState.validate()) {
+                    authService.register(email, password);
+                  }
                 },
               )
             ],
