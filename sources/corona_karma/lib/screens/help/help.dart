@@ -1,8 +1,11 @@
 import 'package:corona_karma/models/help.dart';
+import 'package:corona_karma/models/user.dart';
+import 'package:corona_karma/services/database.dart';
 import 'package:corona_karma/styles.dart';
 import 'package:corona_karma/widgets/titleBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Help extends StatefulWidget {
   String searchText;
@@ -24,8 +27,23 @@ class _HelpState extends State<Help> {
     HelpInformation("Sag und, um was es geht"),
   ];
 
+  User _user;
+  DatabaseService databaseService = DatabaseService();
+  bool requestPending = false;
+
   @override
   Widget build(BuildContext context) {
+    _user = Provider.of<User>(context);
+    databaseService.user = _user;
+
+    databaseService.getOwnRequest().then((ownHelrequests){
+      setState(() {
+        for(var request in ownHelrequests.requests) {
+          informations.forEach((it) => it.text == request ? it.value = true : it.value = it.value);
+        }
+      });
+    });
+
     List<Widget> informationRows = [];
 
     for (int i = 0; i < informations.length; i++) {
@@ -107,10 +125,27 @@ class _HelpState extends State<Help> {
                 ),
                 margin: EdgeInsets.only(bottom: 12, top: 12),
               ),
-              CupertinoButton(
-                child: Text("Hilfe anfragen"),
-                onPressed: () {},
-              )
+              requestPending
+                  ? CupertinoActivityIndicator(
+                      animating: true,
+                    )
+                  : CupertinoButton(
+                      child: Text("Hilfe anfragen"),
+                      onPressed: () async {
+                        setState(() {
+                          requestPending = true;
+                        });
+                        List<String> requests = informations
+                            .where((it) => it.value)
+                            .map((it) => it.text)
+                            .toList();
+                        await databaseService.createHelpRequest(
+                            requests, "Hier steht eine Notitz");
+                        setState(() {
+                          requestPending = false;
+                        });
+                      },
+                    )
             ],
           ),
         ),

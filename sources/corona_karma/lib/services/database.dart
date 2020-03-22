@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class DatabaseService {
   User user;
   final positionsCollection = Firestore.instance.collection('positions');
+  final requestsCollection = Firestore.instance.collection('requests');
   DateTime lastCall = DateTime.now();
 
   Future createPositionRecord(double long, double lat) async {
@@ -32,6 +33,20 @@ class DatabaseService {
       );
     }).toList();
   }
+
+  Future createHelpRequest(List<String> requests, String note) async {
+    return await requestsCollection.document(user.uid).setData(
+        {'requests': requests, 'requestUser': user.name, 'note': note});
+  }
+
+  Future<HelpRequest> getOwnRequest() async {
+    DocumentSnapshot snapshot = await requestsCollection.document(user.uid).get();
+    return HelpRequest(
+        requestUser: snapshot.data['requestUser'],
+        requests: List<String>.from(snapshot.data['requests']),
+        note: snapshot.data['note']
+      );
+  }
 }
 
 class PositionData {
@@ -40,4 +55,12 @@ class PositionData {
   double lat;
 
   PositionData({this.username, this.long, this.lat});
+}
+
+class HelpRequest {
+  String requestUser;
+  List<String> requests;
+  String note;
+
+  HelpRequest({this.requestUser, this.requests, this.note});
 }
