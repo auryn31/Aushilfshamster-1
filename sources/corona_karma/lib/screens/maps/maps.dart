@@ -172,7 +172,7 @@ class MapSampleState extends State<MapSample> {
     if (otherUserLocations != null) {
       otherUserMarker = otherUserLocations
           .map((loc) => Marker(
-              markerId: MarkerId(loc.uid),
+              markerId: MarkerId(loc.username),
               position: LatLng(loc.lat, loc.long),
               icon: bitmapDescriptor))
           .toList();

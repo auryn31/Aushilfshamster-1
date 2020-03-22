@@ -26,7 +26,6 @@ class DatabaseService {
   List<PositionData> _positionListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return PositionData(
-        uid: doc.data['uid'] ?? '',
         username: doc.data['username'] ?? '',
         long: doc.data['long'] ?? 0,
         lat: doc.data['lat'] ?? 0,
@@ -36,10 +35,9 @@ class DatabaseService {
 }
 
 class PositionData {
-  String uid;
   String username;
   double long;
   double lat;
 
-  PositionData({this.uid, this.username, this.long, this.lat});
+  PositionData({this.username, this.long, this.lat});
 }
