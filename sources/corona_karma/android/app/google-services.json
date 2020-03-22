@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "104152397314",
+    "firebase_url": "https://corona-karma.firebaseio.com",
+    "project_id": "corona-karma",
+    "storage_bucket": "corona-karma.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104152397314:android:a2e3519eb6565840f0191b",
+        "android_client_info": {
+          "package_name": "com.example.corona_karma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "104152397314-3u1nmtcpfpgt7tmor3juk629162glsv7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAy1k9VeFr7tcKOOtYYSja6FiMsn4PWswY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "104152397314-3u1nmtcpfpgt7tmor3juk629162glsv7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
