@@ -1,6 +1,7 @@
 import 'package:corona_karma/models/user.dart';
 import 'package:corona_karma/screens/wrapper.dart';
 import 'package:corona_karma/services/auth.dart';
+import 'package:corona_karma/services/awards.dart';
 import 'package:corona_karma/services/chat.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +25,10 @@ class MyApp extends StatelessWidget {
               create: (context) =>
                   ChatService(Provider.of<User>(context, listen: false).uid)
                       .chats),
+          StreamProvider<int>(
+              create: (context) =>
+                  AwardService(Provider.of<User>(context, listen: false).uid)
+                      .awards),
         ],
         child: CupertinoApp(
           home: Wrapper(),

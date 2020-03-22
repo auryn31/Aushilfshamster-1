@@ -1,8 +1,23 @@
 import 'package:corona_karma/widgets/itemStack.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class ProfileCupboardWidget extends StatelessWidget {
+  List<Widget> cupboardRows(int items) {
+    List<Widget> rows = List();
+
+    int rowsToGenerate = (items / 10).round();
+
+    for (var i = 0; i < rowsToGenerate; i++) {
+      rows.add(CupboardRowWidget(iconName: "toilet_roll", stackSize: 10));
+    }
+
+    rows.add(CupboardRowWidget(iconName: "toilet_roll", stackSize: items % 10));
+
+    return rows;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,15 +40,10 @@ class ProfileCupboardWidget extends StatelessWidget {
                   Container(
                       margin: EdgeInsets.only(
                           top: 20, bottom: 25, left: 5, right: 5),
-                      child: ListView(
-                        children: <Widget>[
-                          CupboardRowWidget(
-                              iconName: "toilet_roll", stackSize: 1),
-                          CupboardRowWidget(iconName: "cereal", stackSize: 9),
-                          CupboardRowWidget(iconName: "bleach", stackSize: 10),
-                          CupboardRowWidget(iconName: "pasta", stackSize: 2),
-                        ],
-                      ))
+                      child: Consumer<int>(
+                          builder: (context, items, _) => items == null
+                              ? ListView(children: cupboardRows(0))
+                              : ListView(children: cupboardRows(items))))
                 ])));
   }
 }
