@@ -1,6 +1,8 @@
 import 'package:corona_karma/models/help.dart';
+import 'package:corona_karma/styles.dart';
 import 'package:corona_karma/widgets/titleBar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class Help extends StatefulWidget {
   String searchText;
@@ -19,7 +21,7 @@ class _HelpState extends State<Help> {
     HelpInformation("Paket abholen"),
     HelpInformation("Gartenarbeit"),
     HelpInformation("Telefonanruf"),
-    HelpInformation("NIX KANNIK"),
+    HelpInformation("Sag und, um was es geht"),
   ];
 
   @override
@@ -30,13 +32,32 @@ class _HelpState extends State<Help> {
       var row = Container(
         child: Row(
           children: <Widget>[
-            CupertinoSwitch(
-              onChanged: (value) {
+            GestureDetector(
+              onTap: () {
                 setState(() {
-                  informations[i].value = value;
+                  informations[i].value = !informations[i].value;
                 });
               },
-              value: informations[i].value,
+              child: Stack(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.only(right: 8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Styles.blue4, width: 1.5),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(4),
+                      ),
+                    ),
+                  ),
+                  informations[i].value
+                      ? Center(
+                          child: Icon(CupertinoIcons.check_mark,
+                              color: Colors.black),
+                        )
+                      : Container(),
+                ],
+              ),
             ),
             Text(informations[i].text)
           ],
@@ -58,6 +79,33 @@ class _HelpState extends State<Help> {
                   child: new Text(
                       "Gib hier an, wobei du die Hilfe deiner Nachbarn benötigst. Du kannst auch mehrere Aufgaben auswählen.")),
               ...informationRows,
+              Container(
+                child: Row(
+                  children: <Widget>[
+                    CupertinoButton(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Styles.blue4,
+                            borderRadius: BorderRadius.circular(36),
+                          ),
+                          height: 36,
+                          width: 36,
+                          child: Icon(
+                            CupertinoIcons.add,
+                            color: Colors.white,
+                            size: 36,
+                          ),
+                        ),
+                        onPressed: () {}),
+                    Text("Notiz hinzufügen")
+                  ],
+                ),
+                margin: EdgeInsets.only(bottom: 12, top: 12),
+              ),
+              CupertinoButton(
+                child: Text("Hilfe anfragen"),
+                onPressed: () {},
+              )
             ],
           ),
         ),
