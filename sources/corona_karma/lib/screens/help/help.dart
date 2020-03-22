@@ -82,21 +82,26 @@ class _HelpState extends State<Help> {
               Container(
                 child: Row(
                   children: <Widget>[
-                    CupertinoButton(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Styles.blue4,
-                            borderRadius: BorderRadius.circular(36),
+                    Container(
+                      width: 24,
+                      margin: EdgeInsets.only(right: 8),
+                      child: CupertinoButton(
+                          padding: EdgeInsets.all(0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Styles.blue4,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            height: 24,
+                            width: 24,
+                            child: Icon(
+                              CupertinoIcons.add,
+                              color: Colors.white,
+                              size: 24,
+                            ),
                           ),
-                          height: 36,
-                          width: 36,
-                          child: Icon(
-                            CupertinoIcons.add,
-                            color: Colors.white,
-                            size: 36,
-                          ),
-                        ),
-                        onPressed: () {}),
+                          onPressed: () {}),
+                    ),
                     Text("Notiz hinzufügen")
                   ],
                 ),
