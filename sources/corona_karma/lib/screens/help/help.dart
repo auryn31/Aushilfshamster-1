@@ -32,17 +32,24 @@ class _HelpState extends State<Help> {
   bool requestPending = false;
 
   @override
+  initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      databaseService.getOwnRequest().then((ownHelrequests) {
+        setState(() {
+          for (var request in ownHelrequests.requests) {
+            informations.forEach((it) =>
+                it.text == request ? it.value = true : it.value = it.value);
+          }
+        });
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     _user = Provider.of<User>(context);
     databaseService.user = _user;
-
-    databaseService.getOwnRequest().then((ownHelrequests){
-      setState(() {
-        for(var request in ownHelrequests.requests) {
-          informations.forEach((it) => it.text == request ? it.value = true : it.value = it.value);
-        }
-      });
-    });
 
     List<Widget> informationRows = [];
 
