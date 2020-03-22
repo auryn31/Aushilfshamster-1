@@ -29,6 +29,7 @@ class MapSampleState extends State<MapSample> {
   User _user;
   Set<Marker> _markers = Set<Marker>();
   LocationData currentLocation;
+  DatabaseService databaseService = DatabaseService();
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: INITIAL_LOCATION,
@@ -37,8 +38,8 @@ class MapSampleState extends State<MapSample> {
 
   @override
   Widget build(BuildContext context) {
-    _user = Provider.of<User>(context);
-
+    _user = Provider.of<User>(context);    
+  databaseService.user = _user;
     _trackUser();
     return SafeArea(
       child: CupertinoPageScaffold(
@@ -158,9 +159,9 @@ class MapSampleState extends State<MapSample> {
   }
 
   Future<void> _saveUserLocationToFirebase(LocationData location) async {
-    if (_user == null) return;
-    await DatabaseService(user: _user)
-        .createPositionRecord(location.longitude, location.latitude);
+    if (_user == null || databaseService == null) return;
+    await databaseService.createPositionRecord(
+        location.longitude, location.latitude);
   }
 
   Future<void> _updateCurrentLocation(LocationData location) async {
