@@ -29,25 +29,28 @@ class HelpRequestWidget extends StatelessWidget {
         child: Column(children: [
           Row(crossAxisAlignment: CrossAxisAlignment.end, children: <Widget>[
             SvgPicture.asset("assets/chatIcons/$proposalIcon.svg",
-                width: 80, height: 80),
+                width: 55, height: 55),
             Expanded(
-                child: Column(children: <Widget>[
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(helperName),
-                  Text(timeago.format(postTime, locale: 'de'),
-                      style: Styles.messageTimeText)
-                ],
-              ),
-              Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                      "$helperName ${getHelperTextFromIcon(proposalIcon)}",
-                      style: Styles.messageTimeText,
-                      maxLines: 3))
-            ]))
+                child: Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(helperName),
+                              Text(timeago.format(postTime, locale: 'de'),
+                                  style: Styles.messageTimeText)
+                            ],
+                          ),
+                          Text(
+                              "$helperName ${getHelperTextFromIcon(proposalIcon)}",
+                              style: Styles.messageTimeText,
+                              maxLines: 3)
+                        ])))
           ]),
           Container(
               margin: EdgeInsets.only(top: 16),
