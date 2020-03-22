@@ -12,13 +12,14 @@ class MessageService {
         .where("chatID", isEqualTo: chatID)
         .orderBy("timestamp")
         .snapshots()
-        .map((QuerySnapshot snapshot) => snapshot.documents.map((doc) =>
-            Message(
-                text: doc.data["text"],
-                sender: doc.data["sender"],
-                timestamp: DateTime.fromMicrosecondsSinceEpoch(
-                    doc.data["timestamp"]))));
+        .map((QuerySnapshot snapshot) =>
+            snapshot.documents.map((doc) => parseMessage(doc)));
   }
+
+  Message parseMessage(doc) => Message(
+      text: doc.data["text"],
+      sender: doc.data["sender"],
+      timestamp: DateTime.fromMicrosecondsSinceEpoch(doc.data["timestamp"]));
 
   Future sendMessage(String text, String sender) async {
     return await messagesCollections.add({
@@ -27,5 +28,14 @@ class MessageService {
       'sender': sender,
       'timestamp': DateTime.now().microsecondsSinceEpoch
     });
+  }
+
+  Stream<Message> get lastMessage {
+    return messagesCollections
+        .where("chatID", isEqualTo: chatID)
+        .orderBy("timestamp", descending: true)
+        .limit(1)
+        .snapshots()
+        .map((doc) => parseMessage(doc.documents.first));
   }
 }

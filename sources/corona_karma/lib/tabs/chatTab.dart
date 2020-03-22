@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:corona_karma/models/chat.dart';
+import 'package:corona_karma/models/message.dart';
 import 'package:corona_karma/models/user.dart';
 import 'package:corona_karma/screens/chat/helped.dart';
+import 'package:corona_karma/services/message.dart';
 import 'package:corona_karma/widgets/titleBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,7 @@ class ChatListWidget extends StatelessWidget {
         builder: (context, chats, _) => ListView.builder(
             itemCount: chats == null ? 0 : chats.length,
             itemBuilder: (context, index) => GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
                   Navigator.push(
                       context,
@@ -37,11 +40,23 @@ class ChatListWidget extends StatelessWidget {
                                     "Susanne hat angeboten, für dich Medikamente von der Apotheke abzuholen.",
                               )));
                 },
-                child: ChatPreview(
-                    name: _getPartnerName(user, chats.elementAt(index)),
-                    time: DateTime.now().subtract(Duration(minutes: 10)),
-                    message: "Jürgen?",
-                    iconName: chats.elementAt(index).chatIcon))));
+                child: StreamProvider<Message>.value(
+                    value: MessageService(chatID: chats.elementAt(index).chatID)
+                        .lastMessage,
+                    child: Consumer<Message>(
+                        builder: (context, message, _) => message == null
+                            ? ChatPreview(
+                                name: _getPartnerName(
+                                    user, chats.elementAt(index)),
+                                time: DateTime.now(),
+                                message: "",
+                                iconName: chats.elementAt(index).chatIcon)
+                            : ChatPreview(
+                                name: _getPartnerName(
+                                    user, chats.elementAt(index)),
+                                time: message.timestamp,
+                                message: message.text,
+                                iconName: chats.elementAt(index).chatIcon))))));
   }
 }
 
