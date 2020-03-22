@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:corona_karma/screens/help/help.dart';
+import 'package:corona_karma/services/database.dart';
 import 'package:corona_karma/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:ui' as ui;
+import 'package:provider/provider.dart';
+import 'package:corona_karma/models/user.dart';
 
 class MapSample extends StatefulWidget {
   @override
@@ -23,6 +26,7 @@ class MapSampleState extends State<MapSample> {
   String searchText = '';
 
   Completer<GoogleMapController> _controller = Completer();
+  User _user;
   Set<Marker> _markers = Set<Marker>();
   LocationData currentLocation;
 
@@ -33,6 +37,8 @@ class MapSampleState extends State<MapSample> {
 
   @override
   Widget build(BuildContext context) {
+    _user = Provider.of<User>(context);
+
     _trackUser();
     return SafeArea(
       child: CupertinoPageScaffold(
@@ -147,7 +153,14 @@ class MapSampleState extends State<MapSample> {
 
     location.onLocationChanged().listen((location) {
       _updateCurrentLocation(location);
+      _saveUserLocationToFirebase(location);
     });
+  }
+
+  Future<void> _saveUserLocationToFirebase(LocationData location) async {
+    if (_user == null) return;
+    await DatabaseService(user: _user)
+        .createPositionRecord(location.longitude, location.latitude);
   }
 
   Future<void> _updateCurrentLocation(LocationData location) async {
