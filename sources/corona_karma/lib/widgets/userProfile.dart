@@ -39,8 +39,7 @@ class UserProfileWidget extends StatelessWidget {
             Container(
                 padding: EdgeInsets.all(9),
                 decoration: BoxDecoration(
-                    border:
-                        Border.all(color: Color.fromARGB(255, 23, 126, 232)),
+                    border: Border.all(color: Styles.blue1),
                     borderRadius: BorderRadius.all(Radius.circular(3))),
                 child: Text("    Profil bearbeiten   ",
                     style: Styles.editProfileButton)),

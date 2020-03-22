@@ -36,12 +36,14 @@ class ChatPreview extends StatelessWidget {
                   ]),
               Container(
                   margin: EdgeInsets.only(right: 23, top: 4),
-                  child: Text(
-                    message,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style: Styles.messageText,
-                  ))
+                  child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        message,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: Styles.messageText,
+                      )))
             ],
           ))
         ]));
