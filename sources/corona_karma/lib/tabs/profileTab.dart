@@ -1,4 +1,5 @@
 import 'package:corona_karma/models/user.dart';
+import 'package:corona_karma/widgets/profileCupboard.dart';
 import 'package:corona_karma/widgets/userProfile.dart';
 import 'package:provider/provider.dart';
 import 'package:corona_karma/widgets/titleBar.dart';
@@ -12,10 +13,13 @@ Widget profileBuilder(context) {
         middle: TitleBar(titleText: "Hallo ${user.name}"),
       ),
       child: SafeArea(
-          child: UserProfileWidget(skills: [
-        "• Einkaufen gehen",
-        "• Hund ausführen",
-        "• Medikament besorgen",
-        "• Post holen/bringen"
+          child: Column(children: <Widget>[
+        UserProfileWidget(skills: [
+          "• Einkaufen gehen",
+          "• Hund ausführen",
+          "• Medikament besorgen",
+          "• Post holen/bringen"
+        ]),
+        Expanded(child: ProfileCupboardWidget())
       ])));
 }

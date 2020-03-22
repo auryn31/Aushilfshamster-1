@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ItemStack extends StatelessWidget {
   const ItemStack({
     Key key,
     this.stackSize,
-    this.stackIcon,
+    this.iconName,
   }) : super(key: key);
 
+  final double stackOffset = 30;
   final int stackSize;
-  final ImageProvider<dynamic> stackIcon;
+  final String iconName;
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +18,15 @@ class ItemStack extends StatelessWidget {
 
     for (var i = 0; i < list.length; i++) {
       list[i] = Positioned(
-        left: i * 5.0,
-        child: Image(image: stackIcon, width: 50, height: 50),
+        left: i * stackOffset,
+        child: SvgPicture.asset("assets/shelfIcons/$iconName.svg",
+            width: 50, height: 50),
       );
     }
 
-    return Stack(children: list);
+    return SizedBox(
+        width: 50 + stackSize * stackOffset - stackOffset,
+        height: 50,
+        child: Stack(children: list));
   }
 }

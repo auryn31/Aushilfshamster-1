@@ -27,11 +27,6 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/toilet_paper.png
-    - assets/can.png
-    - assets/corn.png
-    - assets/bleach.png
-    - assets/spaghetti.png
     - assets/profile.png
     - assets/chatIcons/dog.svg
     - assets/chatIcons/groceries.svg
@@ -44,3 +39,9 @@ flutter:
     - assets/tabIcons/map_active.svg
     - assets/tabIcons/profile_active.svg
     - assets/maps_position.svg
+    - assets/shelfIcons/shelf.svg
+    - assets/shelfIcons/shelf_beam.svg
+    - assets/shelfIcons/toilet_roll.svg
+    - assets/shelfIcons/cereal.svg
+    - assets/shelfIcons/bleach.svg
+    - assets/shelfIcons/pasta.svg
