@@ -6,6 +6,7 @@ class Chat {
   final String chatIcon;
   final bool accepted;
   final bool done;
+  final DateTime timestamp;
 
   Chat(
       {this.chatID,
@@ -14,5 +15,6 @@ class Chat {
       this.requester,
       this.chatIcon,
       this.accepted,
-      this.done});
+      this.done,
+      this.timestamp});
 }

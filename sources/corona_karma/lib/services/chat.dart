@@ -10,12 +10,17 @@ class ChatService {
   Stream<Iterable<Chat>> get chats {
     return chatsCollections
         .where("owners", arrayContains: _uid)
+        .where("done", isEqualTo: false)
         .snapshots()
         .map((QuerySnapshot snapshot) => snapshot.documents.map((doc) => Chat(
             owners: List<String>.from(doc.data["owners"]),
             ownerNames: List<String>.from(doc.data["ownerNames"]),
             requester: doc.data["requester"],
-            chatID: doc.data["chatID"],
-            chatIcon: doc.data["chatIcon"])));
+            chatID: doc.documentID,
+            chatIcon: doc.data["chatIcon"],
+            accepted: doc.data["accepted"],
+            done: doc.data["done"],
+            timestamp:
+                DateTime.fromMicrosecondsSinceEpoch(doc.data["timestamp"]))));
   }
 }

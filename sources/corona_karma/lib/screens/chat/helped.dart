@@ -7,18 +7,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../styles.dart';
+import '../../utils.dart';
 
 class HelpedChatStatusHeaderWidget extends StatelessWidget {
-  const HelpedChatStatusHeaderWidget({
-    Key key,
-    this.proposalText,
-    this.proposalIcon,
-  }) : super(key: key);
+  const HelpedChatStatusHeaderWidget(
+      {Key key,
+      this.proposalText,
+      this.proposalIcon,
+      this.retractTask,
+      this.finishedTask})
+      : super(key: key);
 
   final String proposalText;
   final String proposalIcon;
+
+  final VoidCallback retractTask;
+  final VoidCallback finishedTask;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,33 +38,35 @@ class HelpedChatStatusHeaderWidget extends StatelessWidget {
             Expanded(
                 child: Container(
                     margin: EdgeInsets.only(left: 13),
-                    child: Text(
-                        "Susanne hat angeboten, für dich Medikamente von der Apotheke abzuholen.",
-                        style: Styles.messageTimeText,
-                        maxLines: 3)))
+                    child: Text(proposalText,
+                        style: Styles.messageTimeText, maxLines: 3)))
           ]),
           Container(
               margin: EdgeInsets.only(top: 16),
               child: Row(children: <Widget>[
                 Spacer(),
-                Container(
-                    padding: EdgeInsets.all(9),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Styles.blue1),
-                        borderRadius: BorderRadius.all(Radius.circular(3))),
-                    child: Text("Aufgabe zurückziehen",
-                        style: Styles.editProfileButton)),
+                GestureDetector(
+                    onTap: retractTask,
+                    child: Container(
+                        padding: EdgeInsets.all(9),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Styles.blue1),
+                            borderRadius: BorderRadius.all(Radius.circular(3))),
+                        child: Text("Aufgabe zurückziehen",
+                            style: Styles.editProfileButton))),
                 Spacer(),
-                Container(
-                    padding:
-                        EdgeInsets.only(left: 30, right: 30, top: 9, bottom: 9),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Styles.blue4),
-                        color: Styles.blue4,
-                        borderRadius: BorderRadius.all(Radius.circular(3))),
-                    child: Text("Erledigt",
-                        style: Styles.editProfileButton
-                            .merge(TextStyle(color: Colors.white)))),
+                GestureDetector(
+                    onTap: finishedTask,
+                    child: Container(
+                        padding: EdgeInsets.only(
+                            left: 30, right: 30, top: 9, bottom: 9),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Styles.blue4),
+                            color: Styles.blue4,
+                            borderRadius: BorderRadius.all(Radius.circular(3))),
+                        child: Text("Erledigt",
+                            style: Styles.editProfileButton
+                                .merge(TextStyle(color: Colors.white))))),
                 Spacer(),
               ])),
         ]));
@@ -65,28 +75,21 @@ class HelpedChatStatusHeaderWidget extends StatelessWidget {
 
 class HelpedChatWidget extends StatefulWidget {
   const HelpedChatWidget(
-      {Key key,
-      this.chatID,
-      this.chatPartnerName,
-      this.proposalText,
-      this.proposalIcon})
+      {Key key, this.chatID, this.chatPartnerName, this.proposalIcon})
       : super(key: key);
 
   final String chatID;
   final String chatPartnerName;
-  final String proposalText;
   final String proposalIcon;
 
   _HelpedChatState createState() =>
-      _HelpedChatState(chatID, chatPartnerName, proposalText, proposalIcon);
+      _HelpedChatState(chatID, chatPartnerName, proposalIcon);
 }
 
 class _HelpedChatState extends State<HelpedChatWidget> {
-  _HelpedChatState(this._chatID, this._chatPartnerName, this._proposalText,
-      this._proposalIcon);
+  _HelpedChatState(this._chatID, this._chatPartnerName, this._proposalIcon);
 
   final String _chatPartnerName;
-  final String _proposalText;
   final String _proposalIcon;
   final String _chatID;
   TextEditingController _textController;
@@ -96,6 +99,14 @@ class _HelpedChatState extends State<HelpedChatWidget> {
     super.initState();
     _textController = TextEditingController();
   }
+
+  Future finishChat(String chatID) =>
+      Firestore.instance.collection('chats').document(chatID).updateData({
+        'done': true,
+      });
+
+  Future retractChat(String chatID) =>
+      Firestore.instance.collection('chats').document(chatID).delete();
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +121,17 @@ class _HelpedChatState extends State<HelpedChatWidget> {
             child: SafeArea(
                 child: Column(children: [
               HelpedChatStatusHeaderWidget(
-                  proposalIcon: _proposalIcon, proposalText: _proposalText),
+                  proposalIcon: _proposalIcon,
+                  proposalText:
+                      "$_chatPartnerName ${getHelperTextFromIcon(_proposalIcon)}",
+                  retractTask: () {
+                    retractChat(_chatID);
+                    Navigator.pop(context);
+                  },
+                  finishedTask: () {
+                    finishChat(_chatID);
+                    Navigator.pop(context);
+                  }),
               Divider(),
               Expanded(
                   child: Container(
