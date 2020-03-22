@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
   User user;
-  final dataReference = Firestore.instance.collection('positions');
+  final positionsCollection = Firestore.instance.collection('positions');
   DateTime lastCall = DateTime.now();
 
   Future createPositionRecord(double long, double lat) async {
@@ -13,9 +13,33 @@ class DatabaseService {
       print("===> Save:");
       print({'uid': user.uid, 'username': user.name, 'long': long, 'lat': lat});
       print("to document with id" + user.uid);
-      return await dataReference.document(user.uid).setData(
+      return await positionsCollection.document(user.uid).setData(
           {'uid': user.uid, 'username': user.name, 'long': long, 'lat': lat});
     }
     return;
   }
+
+  Stream<List<PositionData>> get positions {
+    return positionsCollection.snapshots().map(_positionListFromSnapshot);
+  }
+
+  List<PositionData> _positionListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return PositionData(
+        uid: doc.data['uid'] ?? '',
+        username: doc.data['username'] ?? '',
+        long: doc.data['long'] ?? 0,
+        lat: doc.data['lat'] ?? 0,
+      );
+    }).toList();
+  }
+}
+
+class PositionData {
+  String uid;
+  String username;
+  double long;
+  double lat;
+
+  PositionData({this.uid, this.username, this.long, this.lat});
 }
