@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:corona_karma/screens/help/help.dart';
+import 'package:corona_karma/services/database.dart';
 import 'package:corona_karma/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:ui' as ui;
+import 'package:provider/provider.dart';
+import 'package:corona_karma/models/user.dart';
 
 class MapSample extends StatefulWidget {
   @override
@@ -23,8 +26,10 @@ class MapSampleState extends State<MapSample> {
   String searchText = '';
 
   Completer<GoogleMapController> _controller = Completer();
+  User _user;
   Set<Marker> _markers = Set<Marker>();
   LocationData currentLocation;
+  DatabaseService databaseService = DatabaseService();
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: INITIAL_LOCATION,
@@ -33,78 +38,79 @@ class MapSampleState extends State<MapSample> {
 
   @override
   Widget build(BuildContext context) {
-    _trackUser();
+    _user = Provider.of<User>(context);
+    databaseService.user = _user;
+
+    final mapPositions = Provider.of<List<PositionData>>(context);    
+
+    _trackUser(mapPositions);
     return SafeArea(
       child: CupertinoPageScaffold(
-          child: Stack(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(0),
-            child: GoogleMap(
-              mapType: MapType.normal,
-              initialCameraPosition: _kGooglePlex,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-                _setInitialMarker();
-              },
-              markers: _markers,
-              myLocationButtonEnabled: false,
-            ),
-          ),
-          Container(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: CupertinoTextField(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: Colors.white),
-                      placeholder: "Suche",
-                      onChanged: (value) => setState(() => searchText = value)),
-                ),
-                CupertinoButton(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Styles.blue4,
-                      borderRadius: BorderRadius.circular(36),
-                    ),
-                    height: 36,
-                    width: 36,
-                    child: Icon(
-                      CupertinoIcons.add,
-                      color: Colors.white,
-                      size: 36,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => Help(searchText)),
-                    );
-                  },
-                )
-              ],
-            ),
-            padding: EdgeInsets.all(16),
-          ),
-          new Positioned(
-            child: new Align(
-              alignment: FractionalOffset.bottomRight,
-              child: CupertinoButton(
-                child: Icon(CupertinoIcons.plus_circled),
-                onPressed: () => _goToCurrentLocation(),
+        child: Stack(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(0),
+              child: GoogleMap(
+                mapType: MapType.normal,
+                initialCameraPosition: _kGooglePlex,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                  _setInitialMarker();
+                },
+                markers: _markers,
+                myLocationButtonEnabled: false,
               ),
             ),
-          ),
-        ],
-      )
-
-          // floatingActionButton: CupertinoButton(
-          //   onPressed: _goToCurrentLocation,
-          //   child: Icon(CupertinoIcons.person),
-          // ),
-          ),
+            Container(
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: CupertinoTextField(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: Colors.white),
+                        placeholder: "Suche",
+                        onChanged: (value) =>
+                            setState(() => searchText = value)),
+                  ),
+                  CupertinoButton(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Styles.blue4,
+                        borderRadius: BorderRadius.circular(36),
+                      ),
+                      height: 36,
+                      width: 36,
+                      child: Icon(
+                        CupertinoIcons.add,
+                        color: Colors.white,
+                        size: 36,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => Help(searchText)),
+                      );
+                    },
+                  )
+                ],
+              ),
+              padding: EdgeInsets.all(16),
+            ),
+            new Positioned(
+              child: new Align(
+                alignment: FractionalOffset.bottomRight,
+                child: CupertinoButton(
+                  child: Icon(CupertinoIcons.plus_circled),
+                  onPressed: () => _goToCurrentLocation(),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -123,7 +129,7 @@ class MapSampleState extends State<MapSample> {
     });
   }
 
-  Future<void> _trackUser() async {
+  Future<void> _trackUser(List<PositionData> otherUserLocations) async {
     Location location = new Location();
 
     bool _serviceEnabled;
@@ -146,14 +152,32 @@ class MapSampleState extends State<MapSample> {
     }
 
     location.onLocationChanged().listen((location) {
-      _updateCurrentLocation(location);
+      _updateCurrentLocation(location, otherUserLocations);
+      _saveUserLocationToFirebase(location);
     });
   }
 
-  Future<void> _updateCurrentLocation(LocationData location) async {
+  Future<void> _saveUserLocationToFirebase(LocationData location) async {
+    if (_user == null || databaseService == null) return;
+    await databaseService.createPositionRecord(
+        location.longitude, location.latitude);
+  }
+
+  Future<void> _updateCurrentLocation(
+      LocationData location, List<PositionData> otherUserLocations) async {
     BitmapDescriptor bitmapDescriptor = await _bitmapDescriptorFromSvgAsset(
         context, 'assets/maps_position.svg');
-    var marker = Marker(
+
+    List<Marker> otherUserMarker = [];
+    if (otherUserLocations != null) {
+      otherUserMarker = otherUserLocations
+          .map((loc) => Marker(
+              markerId: MarkerId(loc.uid),
+              position: LatLng(loc.lat, loc.long),
+              icon: bitmapDescriptor))
+          .toList();
+    }
+    Marker marker = Marker(
         markerId: MarkerId(MARKERID),
         position: LatLng(location.latitude, location.longitude),
         icon: bitmapDescriptor);
@@ -161,7 +185,9 @@ class MapSampleState extends State<MapSample> {
     setState(() {
       currentLocation = location;
       _markers.removeWhere((m) => m.markerId.value == MARKERID);
-      _markers.add(marker);
+      otherUserMarker.forEach((otherMarker) => _markers
+          .removeWhere((m) => m.markerId.value == otherMarker.markerId.value));
+      _markers.addAll([marker, ...otherUserMarker]);
     });
   }
 
