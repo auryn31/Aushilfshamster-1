@@ -120,7 +120,7 @@ class MapSampleState extends State<MapSample> {
     setState(() {
       _markers = {
         Marker(
-            markerId: MarkerId(MARKERID),
+            markerId: MarkerId(_user.name ?? MARKERID),
             position: currentLocation != null
                 ? LatLng(currentLocation.latitude, currentLocation.longitude)
                 : INITIAL_LOCATION,
@@ -178,13 +178,13 @@ class MapSampleState extends State<MapSample> {
           .toList();
     }
     Marker marker = Marker(
-        markerId: MarkerId(MARKERID),
+        markerId: MarkerId(_user.name ?? MARKERID),
         position: LatLng(location.latitude, location.longitude),
         icon: bitmapDescriptor);
 
     setState(() {
       currentLocation = location;
-      _markers.removeWhere((m) => m.markerId.value == MARKERID);
+      _markers.removeWhere((m) => m.markerId.value == _user.name ?? MARKERID);
       otherUserMarker.forEach((otherMarker) => _markers
           .removeWhere((m) => m.markerId.value == otherMarker.markerId.value));
       _markers.addAll([marker, ...otherUserMarker]);
